@@ -14,7 +14,7 @@ SetupPipx() {
     else
         echo "pip not found"
         $SUDO apt-get update
-        $SUDO apt-get install python3-setuptools
+        $SUDO apt-get install -qq -y python3-setuptools
         curl https://bootstrap.pypa.io/pip/3.5/get-pip.py | python3
     fi
     # install venv with system for pipx
