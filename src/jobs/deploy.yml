@@ -30,7 +30,10 @@ parameters:
     type: string
     default: "."
     description: Path to the directory containing your application source code. My default, the current directory will be used.
-
+  profile-name:
+    description: Name of the profile to use for authentication.
+    type: string
+    default: default
 
 docker:
   - image: <<parameters.image>>
@@ -42,5 +45,5 @@ steps:
       name: EB Deploy
       working_directory: <<parameters.app-dir>>
       command: |
-        eb init <<parameters.application-name>> -r $AWS_DEFAULT_REGION -p <<parameters.platform-version>>
+        eb init --profile <<parameters.profile-name>> <<parameters.application-name>> -p <<parameters.platform-version>>
         eb deploy <<parameters.environment-name>> <<#parameters.label>>-l <<parameters.label>><</parameters.label>> <<#parameters.description>>-m <<parameters.description>><</parameters.description>>
