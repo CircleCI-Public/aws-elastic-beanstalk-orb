@@ -27,5 +27,10 @@ steps:
         PARAM_AWS_CLI_ACCESS_KEY_ID: << parameters.aws-access-key-id >>
         PARAM_AWS_CLI_SECRET_ACCESS_KEY: << parameters.aws-secret-access-key >>
         PARAM_AWS_CLI_REGION: << parameters.aws-region >>
-        PARAM_AWS_CLI_PROFILE_NAME: << parameters.profile-name >>
       command: <<include(scripts/install-setup.sh)>>
+  - aws-cli/setup:
+      aws-access-key-id: << parameters.aws-access-key-id >>
+      aws-secret-access-key: << parameters.aws-secret-access-key >>
+      aws-region: << parameters.aws-region >>
+      profile-name: << parameters.profile-name >>
+        
