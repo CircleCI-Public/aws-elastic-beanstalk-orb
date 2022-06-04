@@ -1,7 +1,31 @@
 description: >
   Install and authenticate with the Elastic Beanstalk CLI.
-  You must have your AWS auth environment variables set for ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_DEFAULT_REGION"].
+  You must have your AWS auth environment variables set. By default, ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_DEFAULT_REGION"] will be used.
+
+parameters:
+  aws-access-key-id:
+    description: AWS access key id for IAM role. Set this to the name of the environment variable you will use to hold this value (defaults to AWS_ACCESS_KEY_ID).
+    type: env_var_name
+    default: AWS_ACCESS_KEY_ID
+  aws-secret-access-key:
+    description: AWS secret key for IAM role. Set this to the name of the environment variable you will use to hold this value (defaults to AWS_SECRET_ACCESS_KEY).
+    type: env_var_name
+    default: AWS_SECRET_ACCESS_KEY
+  aws-region:
+    description: AWS region to operate in. Set this to the name of the environment variable you will use to hold this value (defaults to AWS_DEFAULT_REGION).
+    type: env_var_name
+    default: AWS_DEFAULT_REGION
+  profile-name:
+    description: Profile name to be configured.
+    type: string
+    default: default
+
 steps:
   - run:
       name: Setting Up Elastic Beanstalk CLI
+      environment:
+        AWS_ID: << parameters.aws-access-key-id >>
+        AWS_SECRET: << parameters.aws-secret-access-key >>
+        AWS_REGION: << parameters.aws-region >>
+        PROFILE: << parameters.profile-name >>
       command: <<include(scripts/install-setup.sh)>>
