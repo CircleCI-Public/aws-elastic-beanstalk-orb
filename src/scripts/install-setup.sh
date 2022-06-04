@@ -50,16 +50,16 @@ InstallEBCLI() {
 
 CheckAWSEnvVars() {
     ERRMSGTEXT="has not been set. This environment variable is required for authentication."
-    if [ -z "${!AWS_ID}" ]; then
-        echo "$AWS_ID $ERRMSGTEXT"
+    if [ -z "${!PARAM_AWS_CLI_ACCESS_KEY_ID}" ]; then
+        echo "$PARAM_AWS_CLI_ACCESS_KEY_ID $ERRMSGTEXT"
         exit 1
     fi
-    if [ -z "${!AWS_SECRET}" ]; then
-        echo "$AWS_SECRET $ERRMSGTEXT"
+    if [ -z "${!PARAM_AWS_CLI_SECRET_ACCESS_KEY}" ]; then
+        echo "$PARAM_AWS_CLI_SECRET_ACCESS_KEY $ERRMSGTEXT"
         exit 1
     fi
-    if [ -z "${!AWS_REGION}" ]; then
-        echo "$AWS_REGION $ERRMSGTEXT"
+    if [ -z "${!PARAM_AWS_CLI_REGION}" ]; then
+        echo "$PARAM_AWS_CLI_REGION $ERRMSGTEXT"
         exit 1
     fi
 }
