@@ -1,30 +1,26 @@
-# Jobs
+# Orb Source
 
-Easily author and add [Parameterized Jobs](https://circleci.com/docs/2.0/reusing-config/#authoring-parameterized-jobs) to the `src/jobs` directory.
+Orbs are shipped as individual `orb.yml` files, however, to make development easier, it is possible to author an orb in _unpacked_ form, which can be _packed_ with the CircleCI CLI and published.
 
-Each _YAML_ file within this directory will be treated as an orb job, with a name which matches its filename.
+The default `.circleci/config.yml` file contains the configuration code needed to automatically pack, test, and deploy and changes made to the contents of the orb source in this directory.
 
-Jobs may invoke orb commands and other steps to fully automate tasks with minimal user configuration.
+## @orb.yml
 
-View the included _[hello.yml](./hello.yml)_ example.
+This is the entry point for our orb "tree", which becomes our `orb.yml` file later.
 
+Within the `@orb.yml` we generally specify 4 configuration keys
 
-```yaml
-  # What will this job do?
-  # Descriptions should be short, simple, and clear.
-  Sample description
-executor: default
-parameters:
-  greeting:
-    type: string
-    default: "Hello"
-    description: "Select a proper greeting"
-steps:
-  - greet:
-      greeting: << parameters.greeting >>
-```
+**Keys**
+
+1. **version**
+    Specify version 2.1 for orb-compatible configuration `version: 2.1`
+2. **description**
+    Give your orb a description. Shown within the CLI and orb registry
+3. **display**
+    Specify the `home_url` referencing documentation or product URL, and `source_url` linking to the orb's source repository.
+4. **orbs**
+    (optional) Some orbs may depend on other orbs. Import them here.
 
 ## See:
  - [Orb Author Intro](https://circleci.com/docs/2.0/orb-author-intro/#section=configuration)
- - [How To Author Commands](https://circleci.com/docs/2.0/reusing-config/#authoring-parameterized-jobs)
- - [Node Orb "test" Job](https://github.com/CircleCI-Public/node-orb/blob/master/src/jobs/test.yml)
+ - [Reusable Configuration](https://circleci.com/docs/2.0/reusing-config)
