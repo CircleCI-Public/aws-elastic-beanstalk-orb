@@ -1,0 +1,113 @@
+version: 2.1
+orbs:
+  aws-cli: circleci/aws-elastic-beanstalk@dev:<<pipeline.git.revision>>
+  orb-tools: circleci/orb-tools@11.1
+filters: &filters
+  tags:
+    only: /.*/
+
+parameters:
+  test-profile:
+    type: string
+    default: fnaf
+  test-app:
+    type: string
+    default: sample_app
+
+executors:
+  python:
+    docker:
+      - image: cimg/python:3.9
+  base:
+    docker:
+      - image: cimg/base:stable
+
+jobs:
+  # Define one or more jobs which will utilize your orb's commands and parameters to validate your changes.
+  integration-test-1:
+    parameters:
+      compute:
+        description: What executor to use for the job
+        type: executor
+        default:
+    executor: <<parameters.compute>>
+    steps:
+      - checkout
+      - aws-elastic-beanstalk/setup:
+          profile-name: <<pipeline.parameters.test-profile >>
+      - run:
+          name: Verify EB install
+          command: |
+            command -v eb >/dev/null 2>&1 || { echo >&2 "EB cli failed to install or persist to the path"; exit 1; }
+  
+  integreation-test-deploy-setup:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - aws-elastic-beanstalk/setup:
+          profile-name: <<pipeline.parameters.test-profile >>
+      - run:
+          name: EB Create
+          command: |
+            cd <<pipeline.parameters.test-app >>
+            eb init <<pipeline.parameters.test-app >> -r $AWS_DEFAULT_REGION -p node.js
+
+
+workflows:
+
+  integration-test_deploy:
+    jobs:
+      # Run any integration tests defined within the `jobs` key.
+      - integration-test-1:
+          context: [CPE_ORBS_AWS]
+          matrix:
+              parameters:
+                compute: [python, base]
+          filters: *filters
+      - integreation-test-deploy-setup:
+          context: [CPE_ORBS_AWS]
+          filters: *filters
+          requires:
+              - integration-test-1
+      - aws-elastic-beanstalk/deploy:
+          post-steps:
+              - run:
+                  name: Test deployed app
+                  working_directory: ./<<pipeline.parameters.test-app >>
+                  command: curl $(eb status | grep CNAME | cut -d ":" -f 2)
+          context: [CPE_ORBS_AWS]
+          filters: *filters
+          environment-name: sample-app-dev
+          application-name: <<pipeline.parameters.test-app >>
+          label: test-label
+          app-dir: ./<<pipeline.parameters.test-app >>
+          profile-name: <<pipeline.parameters.test-profile >>
+          requires:
+                - integreation-test-deploy-setup
+
+      - orb-tools/pack:
+          filters: *filters
+      - orb-tools/publish:
+          orb-name: circleci/aws-cli
+          vcs-type: << pipeline.project.type >>
+          pub-type: production
+          requires:
+            - orb-tools/pack
+            - integration-test-install-docker-base
+            - integration-test-install-alpine
+            - integration-test-install-macos
+            - integration-test-install-version-docker-base
+            - integration-test-install-version-macos
+            - integration-test-install-version-alpine
+            - integration-test-install-override-version-linuxvm
+            - integration-test-install-override-version-windows
+            - integration-test-install-override-version-arm
+            - integration-test-web-identity-profile
+            - integration-test-role-arn-config
+          context: orb-publisher
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
