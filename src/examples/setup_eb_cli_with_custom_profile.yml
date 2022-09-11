@@ -1,5 +1,5 @@
 description: |
-  Easily install and utilize the AWS Elastic Beanstalk CLI within your CI pipelines.
+  Install and set up the AWS Elastic Beanstalk CLI with a custom profile.
 
 usage:
   version: 2.1
@@ -11,7 +11,8 @@ usage:
         - image: cimg/base:stable
       steps:
         - checkout
-        - eb/setup # orb command to install and setup the EB CLI
+        - eb/setup:
+            profile-name: my_named_profile
         - run:
             name: You may now use the EB CLI within this job
             command: |
