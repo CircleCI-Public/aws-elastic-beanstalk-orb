@@ -24,7 +24,7 @@ jobs:
             command -v eb >/dev/null 2>&1 || { echo >&2 "EB cli failed to install or persist to the path"; exit 1; }
   integration-test-deploy-setup:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/aws:2023.03
     steps:
       - checkout
       - aws-elastic-beanstalk/setup
@@ -56,7 +56,7 @@ workflows:
                   working_directory: ./sample_app
                   command: curl $(eb status | grep CNAME | cut -d ":" -f 2)
           context: [CPE_ORBS_AWS]
-          environment-name: sample-app-dev
+          environment-name: sample-app-env
           application-name: sample_app
           label: test-label
           app-dir: ./sample_app
@@ -71,8 +71,11 @@ workflows:
           pub-type: production
           requires:
             - orb-tools/pack
-            - command-tests
+            - integration-test-1
+            - integration-test-deploy-setup
           context: orb-publisher
+          enable-pr-comment: true
+          github-token: GHI_TOKEN
           filters:
             branches:
               ignore: /.*/
@@ -86,3 +89,4 @@ executors:
   base:
     docker:
       - image: cimg/base:current
+

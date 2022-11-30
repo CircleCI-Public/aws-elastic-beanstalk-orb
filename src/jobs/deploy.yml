@@ -17,7 +17,7 @@ parameters:
   image:
     description: Enter a custom docker image for this job. By default CircleCI's optimized `cimg/base` image will be used.
     type: string
-    default: "cimg/base:stable"
+    default: "cimg/base:current"
   label:
     description: Specify a label to use for the version that the EB CLI creates. If the label has already been used, the EB CLI redeploys the previous version with that label.
     type: string
@@ -40,7 +40,11 @@ steps:
   - setup
   - run:
       name: EB Deploy
-      working_directory: <<parameters.app-dir>>
-      command: |
-        eb init <<parameters.application-name>> -r $AWS_DEFAULT_REGION -p <<parameters.platform-version>>
-        eb deploy <<parameters.environment-name>> <<#parameters.label>>-l <<parameters.label>><</parameters.label>> <<#parameters.description>>-m <<parameters.description>><</parameters.description>>
+      working_directory: << parameters.app-dir >>
+      environment:
+        ORB_EVAL_APPLICATION_NAME: << parameters.application-name >>
+        ORB_EVAL_PLATFORM_VERSION: << parameters.platform-version >>
+        ORB_VAL_ENVIRONMENT_NAME: << parameters.environment-name >>
+        ORB_VAL_LABEL: << parameters.label >>
+        ORB_VAL_DESCRIPTION: << parameters.description >>
+      command: << include(scripts/deploy.sh) >>
