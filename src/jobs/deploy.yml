@@ -30,13 +30,17 @@ parameters:
     type: string
     default: "."
     description: Path to the directory containing your application source code. My default, the current directory will be used.
-
-
+  auth:
+    description: |
+      The authentication method used to access your AWS account. Import the aws-cli orb in your config and
+      provide the aws-cli/setup command to authenticate with your preferred method. View examples for more information.
+    type: steps
 docker:
   - image: <<parameters.image>>
 
 steps:
   - checkout
+  - steps: << parameters.auth >>
   - setup
   - run:
       name: EB Deploy
