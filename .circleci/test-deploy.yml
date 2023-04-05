@@ -37,7 +37,8 @@ jobs:
           name: EB Create
           command: |
             cd sample_app
-            eb init sample_app -r $AWS_DEFAULT_REGION -p node.js
+            eb init sample_app -r $AWS_DEFAULT_REGION -p node.js --profile default
+            eb init sample_app -r us-west-2 -p node.js --profile default
 
 workflows:
   test-deploy:
@@ -63,6 +64,7 @@ workflows:
           auth:
             - aws-cli/setup:
                 role-arn: arn:aws:iam::122211685980:role/CPE_ELASTIC_BEANSTALK_TEST
+                role-session-name: OIDC-Test-Session
           context: [CPE-OIDC]
           environment-name: sample-app-env
           application-name: sample_app
