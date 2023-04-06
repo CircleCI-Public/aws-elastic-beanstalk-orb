@@ -10,7 +10,7 @@ filters: &filters
 
 jobs:
   # Define one or more jobs which will utilize your orb's commands and parameters to validate your changes.
-  integration-test-1:
+  integration-test-install-eb-cli:
     parameters:
       executor:
         type: executor
@@ -44,7 +44,7 @@ workflows:
   test-deploy:
     jobs:
       # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
-      - integration-test-1:
+      - integration-test-install-eb-cli:
           context: [CPE-OIDC]
           matrix:
               parameters:
@@ -53,7 +53,7 @@ workflows:
       - integration-test-deploy-setup:
           context: [CPE-OIDC]
           requires:
-              - integration-test-1
+              - integration-test-install-eb-cli
           filters: *filters
       - aws-elastic-beanstalk/deploy:
           post-steps:
@@ -81,8 +81,9 @@ workflows:
           pub-type: production
           requires:
             - orb-tools/pack
-            - integration-test-1
+            - integration-test-install-eb-cli
             - integration-test-deploy-setup
+            - aws-elastic-beanstalk/deploy
           context: orb-publisher
           enable-pr-comment: true
           github-token: GHI_TOKEN
