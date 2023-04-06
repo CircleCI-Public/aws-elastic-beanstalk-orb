@@ -39,7 +39,6 @@ jobs:
             cd sample_app
             eb init sample_app -r $AWS_DEFAULT_REGION -p node.js --profile default
             eb init sample_app -r us-west-2 -p node.js --profile default
-
 workflows:
   test-deploy:
     jobs:
