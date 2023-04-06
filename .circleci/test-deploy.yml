@@ -1,0 +1,92 @@
+version: 2.1
+orbs:
+  aws-elastic-beanstalk: circleci/aws-elastic-beanstalk@dev:<<pipeline.git.revision>>
+  orb-tools: circleci/orb-tools@11.5
+
+filters: &filters
+  tags:
+    only: /.*/
+
+jobs:
+  # Define one or more jobs which will utilize your orb's commands and parameters to validate your changes.
+  integration-test-1:
+    parameters:
+      executor:
+        type: executor
+        default:
+    executor: <<parameters.executor>>
+    steps:
+      - checkout
+      - aws-elastic-beanstalk/setup
+      - run:
+          name: Verify EB install
+          command: |
+            command -v eb >/dev/null 2>&1 || { echo >&2 "EB cli failed to install or persist to the path"; exit 1; }
+  integration-test-deploy-setup:
+    docker:
+      - image: cimg/aws:2023.03
+    steps:
+      - checkout
+      - aws-elastic-beanstalk/setup
+      - run:
+          name: EB Create
+          command: |
+            cd sample_app
+            eb init sample_app -r $AWS_DEFAULT_REGION -p node.js
+
+workflows:
+  test-deploy:
+    jobs:
+      # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
+      - integration-test-1:
+          context: [CPE_ORBS_AWS]
+          matrix:
+              parameters:
+                executor: [python, base]
+          filters: *filters
+      - integration-test-deploy-setup:
+          context: [CPE_ORBS_AWS]
+          requires:
+              - integration-test-1
+          filters: *filters
+      - aws-elastic-beanstalk/deploy:
+          post-steps:
+              - run:
+                  name: Test deployed app
+                  working_directory: ./sample_app
+                  command: curl $(eb status | grep CNAME | cut -d ":" -f 2)
+          context: [CPE_ORBS_AWS]
+          environment-name: sample-app-env
+          application-name: sample_app
+          label: test-label
+          app-dir: ./sample_app
+          requires:
+                - integration-test-deploy-setup
+          filters: *filters
+      - orb-tools/pack:
+          filters: *filters
+      - orb-tools/publish:
+          orb-name: circleci/aws-elastic-beanstalk
+          vcs-type: << pipeline.project.type >>
+          pub-type: production
+          requires:
+            - orb-tools/pack
+            - integration-test-1
+            - integration-test-deploy-setup
+          context: orb-publisher
+          enable-pr-comment: true
+          github-token: GHI_TOKEN
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
+
+executors:
+  python:
+    docker:
+      - image: cimg/python:3.11
+  base:
+    docker:
+      - image: cimg/base:current
+
