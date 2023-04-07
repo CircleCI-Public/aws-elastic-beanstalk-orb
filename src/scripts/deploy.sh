@@ -11,6 +11,6 @@ if [ -z "${ORB_VAL_DESCRIPTION}" ]; then
 fi
 
 set -x
-eb init "${ORB_EVAL_APPLICATION_NAME}" -r "${AWS_DEFAULT_REGION}" -p "${ORB_EVAL_PLATFORM_VERSION}"
+eb init "${ORB_EVAL_APPLICATION_NAME}" -r "${AWS_DEFAULT_REGION}" -p "${ORB_EVAL_PLATFORM_VERSION}" --profile "${ORB_VAL_PROFILE}"
 eb deploy "${ORB_VAL_ENVIRONMENT_NAME}" "$@"
 set +x
