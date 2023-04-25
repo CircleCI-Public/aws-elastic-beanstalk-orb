@@ -17,7 +17,7 @@ jobs:
         default:
       cli-version:
         type: string
-        default: << parameters.cli-version >>
+        default:
     executor: << parameters.executor >>
     steps:
       - checkout
@@ -30,9 +30,11 @@ jobs:
             command -v eb >/dev/null 2>&1 || { echo >&2 "EB cli failed to install or persist to the path"; exit 1; }
       - run:
           name: Test app version
+          environment:
+            EBCLI_INPUT_VERSION: << parameters.cli-version >> 
           command: |
             echo "Checking CLI version..."
-            EBCLI_VERSION=$(EB_CLI_VERSION=$(eb --version | awk '{print $3}'))
+            EBCLI_VERSION=$(eb --version | awk '{print $3}')
             # Uses python to isolate the latest ebcli version number from the pypi json.
             EBCLI_LATEST_VERSION=$(python3 -c "import json, urllib.request; print(json.load(urllib.request.urlopen('https://pypi.org/pypi/awsebcli/json'))['info']['version'])")""
             echo "Elastic Beanstalk CLI version: $EBCLI_VERSION"
