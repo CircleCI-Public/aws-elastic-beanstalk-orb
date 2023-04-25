@@ -45,7 +45,7 @@ InstallEBCLI() {
             SetupPython
         fi
     fi
-    # If the version environment variable is set, install that version. else install latest.
+    # If the version environment variable is set, install that version. Else install latest.
     if [ ! -z "$EBCLI_VERSION" ]; then
         pipx install awsebcli --version "${EBCLI_VERSION}"
         echo "Complete"

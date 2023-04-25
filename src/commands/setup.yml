@@ -6,7 +6,7 @@ parameters:
   cli-version:
     description: The version of the Elastic Beanstalc CLI that you wish to install. Defaults to latest.
     type: string
-    default: ""
+    default:
 steps:
   - run:
       name: Setting Up Elastic Beanstalk CLI
