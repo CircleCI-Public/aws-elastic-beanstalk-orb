@@ -21,8 +21,8 @@ jobs:
     executor: <<parameters.executor>>
     steps:
       - checkout
-      - aws-cli/setup:
-          role-arn: arn:aws:iam::122211685980:role/CPE_ELASTIC_BEANSTALK_TEST
+      #- aws-cli/setup:
+      #    role-arn: arn:aws:iam::122211685980:role/CPE_ELASTIC_BEANSTALK_TEST
       - aws-elastic-beanstalk/setup
       - run:
           name: Verify EB install
