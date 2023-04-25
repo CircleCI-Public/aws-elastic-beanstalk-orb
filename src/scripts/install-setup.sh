@@ -48,7 +48,7 @@ InstallEBCLI() {
     fi
     # If the version environment variable is set, install that version. Else install latest.
     if [ -n "$EBCLI_VERSION" ]; then
-        pipx install awsebcli --version "${EBCLI_VERSION}"
+        pipx install awsebcli=="${EBCLI_VERSION}"
         echo "Complete"
     else
         pipx install awsebcli

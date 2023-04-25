@@ -49,8 +49,6 @@ jobs:
             if [ -n "$EBCLI_VERSION" ] && [ -n "$EBCLI_INPUT_VERSION" ] && [ -n "$EBCLI_LATEST_VERSION" ]; then
               if [ "$EBCLI_VERSION" == "$EBCLI_INPUT_VERSION" ]; then
                 echo "CLI version matches expected version."
-              elif [ "$EBCLI_VERSION" == "$EBCLI_LATEST_VERSION" ]; then
-                echo "CLI version matches the expected latest version."
               else
                 echo "Error: CLI version does not match expected version." >&2
                 exit 1
