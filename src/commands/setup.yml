@@ -1,7 +1,15 @@
 description: >
   Install and authenticate with the Elastic Beanstalk CLI.
   You must have your AWS auth environment variables set for ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_DEFAULT_REGION"].
+
+parameters:
+  cli-version:
+    description: The version of the Elastic Beanstalc CLI that you wish to install. Defaults to latest.
+    type: string
+    default: ""
 steps:
   - run:
       name: Setting Up Elastic Beanstalk CLI
+      environment:
+        EBCLI_VERSION: << parameters.cli-version >>
       command: <<include(scripts/install-setup.sh)>>

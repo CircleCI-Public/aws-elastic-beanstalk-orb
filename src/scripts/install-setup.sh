@@ -4,7 +4,7 @@ if [[ $EUID == 0 ]]; then export SUDO=""; else # Check if we are root
 fi
 
 SetupPython() {
-    # setups python3
+    # Sets up python3
     $SUDO apt-get -qq -y install python3-dev
     SetupPipx
 }
@@ -18,8 +18,8 @@ SetupPipx() {
         $SUDO apt-get install -qq -y python3-setuptools
         curl https://bootstrap.pypa.io/pip/3.5/get-pip.py | python3
     fi
-    # install venv with system for pipx
-    # by using pipx we dont have to worry about activating the virtualenv before using eb
+    # Install venv with system for pipx
+    # By using pipx we dont have to worry about activating the virtualenv before using eb
     $SUDO apt-get -qq -y install python3-venv
     pip install pipx
 }
@@ -35,7 +35,7 @@ InstallEBCLI() {
         return $?
     elif uname -a | grep Linux > /dev/null 2>&1; then
         $SUDO apt-get -qq update > /dev/null
-        # these are the system level deps for the ebcli
+        # These are the system level deps for the ebcli
         $SUDO apt-get -qq -y install build-essential zlib1g-dev libssl-dev libncurses-dev libffi-dev libsqlite3-dev libreadline-dev libbz2-dev
         if [ "$(which python3 | tail -1)" ]; then
             echo "Python3 env found"
@@ -45,8 +45,14 @@ InstallEBCLI() {
             SetupPython
         fi
     fi
+    # If the version environment variable is set, install that version. else install latest.
+    if [ ! -z "$EBCLI_VERSION" ]; then
+        pipx install awsebcli --version "${EBCLI_VERSION}"
+        echo "Complete"
+    else
         pipx install awsebcli
         echo "Complete"
+    fi
 }
 
 CheckAWSEnvVars() {
