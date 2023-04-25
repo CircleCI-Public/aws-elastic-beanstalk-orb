@@ -27,7 +27,7 @@ SetupPipx() {
 
 
 InstallEBCLI() {
-    EBCLI_VERSION=$(eval echo "${EBCLI_VERSION}")
+    EBCLI_INPUT_VERSION=$(eval echo "${EBCLI_INPUT_VERSION}")
     if uname -a | grep Darwin > /dev/null 2>&1; then
         cd /tmp || { echo "Not able to access /tmp"; return; }
         git clone https://github.com/aws/aws-elastic-beanstalk-cli-setup.git
@@ -47,8 +47,8 @@ InstallEBCLI() {
         fi
     fi
     # If the version environment variable is set, install that version. Else install latest.
-    if [ -n "$EBCLI_VERSION" ]; then
-        pipx install awsebcli=="${EBCLI_VERSION}"
+    if [ -n "$EBCLI_INPUT_VERSION" ]; then
+        pipx install awsebcli=="${EBCLI_INPUT_VERSION}"
         echo "Complete"
     else
         pipx install awsebcli
