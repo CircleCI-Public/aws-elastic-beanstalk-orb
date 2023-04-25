@@ -27,6 +27,7 @@ SetupPipx() {
 
 
 InstallEBCLI() {
+    EBCLI_VERSION=$(eval echo "${EBCLI_VERSION}")
     if uname -a | grep Darwin > /dev/null 2>&1; then
         cd /tmp || { echo "Not able to access /tmp"; return; }
         git clone https://github.com/aws/aws-elastic-beanstalk-cli-setup.git
