@@ -46,7 +46,7 @@ InstallEBCLI() {
             SetupPython
         fi
     fi
-    # If the version environment variable is set, install that version. Else install latest.
+    # If the input version environment variable is set, install that version. Else install latest.
     if [ -n "$EBCLI_INPUT_VERSION" ]; then
         pipx install awsebcli=="${EBCLI_INPUT_VERSION}"
         echo "Complete"
@@ -76,6 +76,6 @@ CheckAWSEnvVars() {
 # View src/tests for more information.
 TEST_ENV="bats-core"
 if [ "${0#*"$TEST_ENV"}" == "$0" ]; then
-    #CheckAWSEnvVars
+    CheckAWSEnvVars
     InstallEBCLI
 fi
