@@ -33,16 +33,16 @@ jobs:
           environment:
             EBCLI_INPUT_VERSION: << parameters.cli-version >> 
           command: |
-            # To prevent confusion when the string is empty
-            if [ -z "$EBCLI_INPUT_VERSION" ]; then
-              EBCLI_INPUT_READABLE_VERSION="latest"
-            fi
             echo "Checking CLI version..."
             EBCLI_VERSION=$(eb --version | awk '{print $3}')
             # Uses python to isolate the latest ebcli version number from the pypi json.
             EBCLI_LATEST_VERSION=$(python3 -c "import json, urllib.request; print(json.load(urllib.request.urlopen('https://pypi.org/pypi/awsebcli/json'))['info']['version'])")""
+            # To prevent confusion when the string is empty, set to latest version
+            if [ -z "$EBCLI_INPUT_VERSION" ]; then
+              EBCLI_INPUT_VERSION="$EBCLI_LATEST_VERSION"
+            fi
             echo "Elastic Beanstalk CLI version: $EBCLI_VERSION"
-            echo "Expected CLI version: $EBCLI_INPUT_READABLE_VERSION"
+            echo "Expected CLI version: $EBCLI_INPUT_VERSION"
             echo "Latest CLI version: $EBCLI_LATEST_VERSION"
 
             # Checks if the installed version matches the expected version
