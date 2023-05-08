@@ -15,7 +15,12 @@ jobs:
       executor:
         type: executor
         default:
-    executor: <<parameters.executor>>
+      cli-version:
+        type: string
+        default:
+    executor: << parameters.executor >>
+    environment:
+      EBCLI_INPUT_VERSION: << parameters.cli-version >>
     steps:
       - checkout
       - aws-cli/setup:
@@ -25,6 +30,36 @@ jobs:
           name: Verify EB install
           command: |
             command -v eb >/dev/null 2>&1 || { echo >&2 "EB cli failed to install or persist to the path"; exit 1; }
+      - run:
+          name: Test app version
+          command: |
+            echo "Checking CLI versions..."
+            # Extracts the version number from the eb --version output
+            EBCLI_VERSION=$(eb --version | awk '{print $3}')
+            # Uses python to isolate the latest ebcli version number from the pypi json.
+            EBCLI_LATEST_VERSION=$(python3 -c "import json, urllib.request; print(json.load(urllib.request.urlopen('https://pypi.org/pypi/awsebcli/json'))['info']['version'])")""
+            # To prevent confusion when the string is empty (due to default), set input version to latest version
+            if [ -z "$EBCLI_INPUT_VERSION" ]; then
+              EBCLI_INPUT_VERSION="$EBCLI_LATEST_VERSION"
+            fi
+            # Prints the version numbers to the console
+            echo "Latest CLI version: $EBCLI_LATEST_VERSION"
+            echo "Expected CLI version: $EBCLI_INPUT_VERSION"
+            echo "Elastic Beanstalk CLI version: $EBCLI_VERSION"
+
+            # Checks if the installed version matches the expected version
+            if [ -n "$EBCLI_VERSION" ] && [ -n "$EBCLI_INPUT_VERSION" ] && [ -n "$EBCLI_LATEST_VERSION" ]; then
+              if [ "$EBCLI_VERSION" == "$EBCLI_INPUT_VERSION" ]; then
+                echo "CLI version matches expected version."
+              else
+                echo "Error: CLI version does not match expected version." >&2
+                exit 1
+              fi
+            else
+              # This error is thrown when either of the above version envs don't get properly set
+              echo "Error: Something went wrong with the EB installation. Unable to acquire version(s)." >&2
+              exit 1
+            fi
   integration-test-deploy-setup:
     docker:
       - image: cimg/base:current
@@ -48,6 +83,8 @@ workflows:
           matrix:
               parameters:
                 executor: [python, base]
+                # Emtpy string will use latest version, otherwise testing random recent versions
+                cli-version: ["", "3.20.5", "3.20.3", "3.20.2", "3.20.0"]
           filters: *filters
       - integration-test-deploy-setup:
           context: [CPE-OIDC]
