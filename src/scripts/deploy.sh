@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-ORB_EVAL_APPLICATION_NAME=$(eval echo "${ORB_EVAL_APPLICATION_NAME}")
-ORB_EVAL_PLATFORM_VERSION=$(eval echo "${ORB_EVAL_PLATFORM_VERSION}")
+ORB_EVAL_APPLICATION_NAME=$(circleci env subst "${ORB_EVAL_APPLICATION_NAME}")
+ORB_EVAL_PLATFORM_VERSION=$(circleci env subst "${ORB_EVAL_PLATFORM_VERSION}")
 
 if [ -z "${ORB_VAL_LABEL}" ]; then
     set -- "$@" -l "${ORB_VAL_LABEL}"
