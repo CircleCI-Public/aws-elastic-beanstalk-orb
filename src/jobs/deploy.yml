@@ -2,15 +2,15 @@ description: >
   Deploy an update to an existing AWS Elastic Beanstalk environment.
 
 parameters:
-  application-name:
+  application_name:
     description: The name of the application (used during `eb init`).
     type: string
     default: ""
-  environment-name:
+  environment_name:
     description: The name of the existing environment (created with `eb create`) to update.
     type: string
     default: ""
-  platform-version:
+  platform_version:
     description: The platform version to use. You can specify a platform, a platform and version, a platform branch, a solution stack name, or a solution stack ARN. Use 'eb platform list' to get a list of available configurations.
     type: string
     default: "node.js"
@@ -26,11 +26,11 @@ parameters:
     description: The description for the application version, enclosed in double quotation marks.
     type: string
     default: ""
-  app-dir:
+  app_dir:
     type: string
     default: "."
     description: Path to the directory containing your application source code. My default, the current directory will be used.
-  profile-name:
+  profile_name:
     description:
       "The name of an AWS profile to use with aws-cli commands"
     type: string
@@ -49,12 +49,12 @@ steps:
   - setup
   - run:
       name: EB Deploy
-      working_directory: << parameters.app-dir >>
+      working_directory: << parameters.app_dir >>
       environment:
-        ORB_EVAL_APPLICATION_NAME: << parameters.application-name >>
-        ORB_EVAL_PLATFORM_VERSION: << parameters.platform-version >>
-        ORB_VAL_ENVIRONMENT_NAME: << parameters.environment-name >>
+        ORB_EVAL_APPLICATION_NAME: << parameters.application_name >>
+        ORB_EVAL_PLATFORM_VERSION: << parameters.platform_version >>
+        ORB_VAL_ENVIRONMENT_NAME: << parameters.environment_name >>
         ORB_VAL_LABEL: << parameters.label >>
         ORB_VAL_DESCRIPTION: << parameters.description >>
-        ORB_VAL_PROFILE: << parameters.profile-name >>
+        ORB_VAL_PROFILE: << parameters.profile_name >>
       command: << include(scripts/deploy.sh) >>

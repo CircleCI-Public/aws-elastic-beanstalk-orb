@@ -20,7 +20,7 @@ usage:
               - aws-cli/setup:
                   profile: "OIDC-USER"
                   role-arn: "arn:aws:iam::123456789012:role/VALID_OIDC_CODEDEPLOY_ROLE"
-            environment-name: my-app # It is assumed this environment has been created
+            environment_name: my-app # It is assumed this environment has been created
             label: version-<<pipeline.number>>
             # Must use same profile configured in aws-cli/setup command
             profile: "OIDC-USER"
