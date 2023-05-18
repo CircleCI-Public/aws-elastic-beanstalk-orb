@@ -19,13 +19,6 @@ workflows:
           filters: *filters
       - shellcheck/check:
           filters: *filters
-      - orb-tools/publish:
-          orb_name: circleci/aws-elastic-beanstalk
-          vcs_type: << pipeline.project.type >>
-          requires:
-            [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check]
-          context: orb-publisher
-          filters: *filters
       - orb-tools/continue:
           orb_name: aws-elastic-beanstalk
           pipeline_number: << pipeline.number >>
