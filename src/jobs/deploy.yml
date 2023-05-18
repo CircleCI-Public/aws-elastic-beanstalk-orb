@@ -14,10 +14,6 @@ parameters:
     description: The platform version to use. You can specify a platform, a platform and version, a platform branch, a solution stack name, or a solution stack ARN. Use 'eb platform list' to get a list of available configurations.
     type: string
     default: "node.js"
-  image:
-    description: Enter a custom docker image for this job. By default CircleCI's optimized `cimg/base` image will be used.
-    type: string
-    default: "cimg/base:current"
   label:
     description: Specify a label to use for the version that the EB CLI creates. If the label has already been used, the EB CLI redeploys the previous version with that label.
     type: string
@@ -35,13 +31,17 @@ parameters:
       "The name of an AWS profile to use with aws-cli commands"
     type: string
     default: 'default'
+  executor:
+    description: The executor to use for this job. By default, this will use the "default" executor provided by this orb.
+    type: executor
+    default: default
   auth:
     description: |
       The authentication method used to access your AWS account. Import the aws-cli orb in your config and
       provide the aws-cli/setup command to authenticate with your preferred method. View examples for more information.
     type: steps
-docker:
-  - image: <<parameters.image>>
+
+executor: << parameters.executor >>
 
 steps:
   - checkout
