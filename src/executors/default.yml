@@ -1,0 +1,20 @@
+description: >
+  A Docker image created by CircleCI with continuous delivery and deployment pipelines in mind.
+  It contains the AWS CLI and other related tools.
+
+parameters:
+  tag:
+    type: string
+    default: "2023.05"
+    description: >
+      What version of the CircleCI CLI Docker image? For full list, see
+      https://hub.docker.com/r/circleci/circleci-cli/tags
+  resource_class:
+    description: Configure the executor resource class
+    type: enum
+    enum: ["small", "medium", "medium+", "large", "xlarge", "2xlarge", "2xlarge+"]
+    default: "medium"
+
+resource_class: << parameters.resource_class >>
+docker:
+  - image: cimg/aws:<< parameters.tag >>

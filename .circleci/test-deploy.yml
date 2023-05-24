@@ -1,12 +1,18 @@
 version: 2.1
 orbs:
-  aws-elastic-beanstalk: circleci/aws-elastic-beanstalk@dev:<<pipeline.git.revision>>
   aws-cli: circleci/aws-cli@3.1
-  orb-tools: circleci/orb-tools@11.6
+  orb-tools: circleci/orb-tools@12.0
+  aws-elastic-beanstalk: {}
 
 filters: &filters
   tags:
     only: /.*/
+
+release-filters: &release-filters
+  branches:
+    ignore: /.*/
+  tags:
+    only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
 jobs:
   # Define one or more jobs which will utilize your orb's commands and parameters to validate your changes.
@@ -15,18 +21,18 @@ jobs:
       executor:
         type: executor
         default:
-      cli-version:
+      cli_version:
         type: string
         default:
     executor: << parameters.executor >>
     environment:
-      ORB_EVAL_EB_CLI_VERSION: << parameters.cli-version >>
+      ORB_EVAL_EB_CLI_VERSION: << parameters.cli_version >>
     steps:
       - checkout
       - aws-cli/setup:
           role-arn: arn:aws:iam::122211685980:role/CPE_ELASTIC_BEANSTALK_TEST
       - aws-elastic-beanstalk/setup:
-          cli-version: << parameters.cli-version >>
+          cli_version: << parameters.cli_version >>
       - run:
           name: Verify EB install
           command: |
@@ -82,54 +88,45 @@ workflows:
       - integration-test-install-eb-cli:
           context: [CPE-OIDC]
           matrix:
-              parameters:
-                executor: [python, base]
-                # Emtpy string will use latest version, otherwise testing random recent versions
-                cli-version: ["", "3.20.5", "3.20.3", "3.20.2", "3.20.0"]
+            parameters:
+              executor: [python, base]
+              # Emtpy string will use latest version, otherwise testing random recent versions
+              cli_version: ["", "3.20.5", "3.20.3", "3.20.2", "3.20.0"]
           filters: *filters
       - integration-test-deploy-setup:
           context: [CPE-OIDC]
           requires:
-              - integration-test-install-eb-cli
+            - integration-test-install-eb-cli
           filters: *filters
       - aws-elastic-beanstalk/deploy:
           post-steps:
-              - run:
-                  name: Test deployed app
-                  working_directory: ./sample_app
-                  command: curl $(eb status | grep CNAME | cut -d ":" -f 2)
+            - run:
+                name: Test deployed app
+                working_directory: ./sample_app
+                command: curl $(eb status | grep CNAME | cut -d ":" -f 2)
           auth:
             - aws-cli/setup:
                 role-arn: arn:aws:iam::122211685980:role/CPE_ELASTIC_BEANSTALK_TEST
                 role-session-name: OIDC-Test-Session
           context: [CPE-OIDC]
-          environment-name: sample-app-env
-          application-name: sample_app
+          environment_name: sample-app-env
+          application_name: sample_app
           label: test-label
-          app-dir: ./sample_app
+          app_dir: ./sample_app
           requires:
-                - integration-test-deploy-setup
+            - integration-test-deploy-setup
           filters: *filters
       - orb-tools/pack:
-          filters: *filters
+          filters: *release-filters
       - orb-tools/publish:
-          orb-name: circleci/aws-elastic-beanstalk
-          vcs-type: << pipeline.project.type >>
-          pub-type: production
-          requires:
-            - orb-tools/pack
-            - integration-test-install-eb-cli
-            - integration-test-deploy-setup
-            - aws-elastic-beanstalk/deploy
+          orb_name: circleci/aws-elastic-beanstalk
+          vcs_type: << pipeline.project.type >>
+          pub_type: production
+          requires: [orb-tools/pack, integration-test-install-eb-cli, integration-test-deploy-setup, aws-elastic-beanstalk/deploy]
           context: orb-publisher
-          enable-pr-comment: true
-          github-token: GHI_TOKEN
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
-
+          enable_pr_comment: true
+          github_token: GHI_TOKEN
+          filters: *release-filters
 executors:
   python:
     docker:
@@ -137,4 +134,3 @@ executors:
   base:
     docker:
       - image: cimg/base:current
-
