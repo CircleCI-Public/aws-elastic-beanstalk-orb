@@ -21,18 +21,18 @@ jobs:
       executor:
         type: executor
         default:
-      cli_version:
+      version:
         type: string
         default:
     executor: << parameters.executor >>
     environment:
-      ORB_EVAL_EB_CLI_VERSION: << parameters.cli_version >>
+      ORB_EVAL_EB_CLI_VERSION: << parameters.version >>
     steps:
       - checkout
       - aws-cli/setup:
           role-arn: arn:aws:iam::122211685980:role/CPE_ELASTIC_BEANSTALK_TEST
       - aws-elastic-beanstalk/setup:
-          cli_version: << parameters.cli_version >>
+          cli_version: << parameters.version >>
       - run:
           name: Verify EB install
           command: |
@@ -91,7 +91,7 @@ workflows:
             parameters:
               executor: [python, base]
               # Emtpy string will use latest version, otherwise testing random recent versions
-              cli_version: ["", "3.20.5", "3.20.3", "3.20.2", "3.20.0"]
+              version: ["", "3.20.5", "3.20.3", "3.20.2", "3.20.0"]
           filters: *filters
       - integration-test-deploy-setup:
           context: [CPE-OIDC]
