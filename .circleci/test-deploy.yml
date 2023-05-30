@@ -32,7 +32,7 @@ jobs:
       - aws-cli/setup:
           role-arn: arn:aws:iam::122211685980:role/CPE_ELASTIC_BEANSTALK_TEST
       - aws-elastic-beanstalk/setup:
-          cli_version: << parameters.version >>
+          version: << parameters.version >>
       - run:
           name: Verify EB install
           command: |
