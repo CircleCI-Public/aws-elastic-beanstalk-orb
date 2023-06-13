@@ -109,6 +109,7 @@ workflows:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ELASTIC_BEANSTALK_TEST
                 role_session_name: OIDC-Test-Session
           context: [CPE-OIDC]
+          region: us-west-2
           environment_name: sample-app-env
           application_name: sample_app
           label: test-label
