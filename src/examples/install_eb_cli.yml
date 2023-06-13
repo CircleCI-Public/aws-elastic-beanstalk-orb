@@ -4,11 +4,11 @@ description: |
 usage:
   version: 2.1
   orbs:
-    eb: circleci/aws-elastic-beanstalk@1.0.0
+    eb: circleci/aws-elastic-beanstalk@3.0
   jobs:
     eb-demo:
       docker:
-        - image: cimg/base:stable
+        - image: cimg/base:current
       steps:
         - checkout
         - eb/setup # orb command to install and setup the EB CLI

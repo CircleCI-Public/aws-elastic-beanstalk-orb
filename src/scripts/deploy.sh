@@ -1,16 +1,20 @@
 #!/usr/bin/env bash
-ORB_EVAL_APPLICATION_NAME=$(circleci env subst "${ORB_EVAL_APPLICATION_NAME}")
-ORB_EVAL_PLATFORM_VERSION=$(circleci env subst "${ORB_EVAL_PLATFORM_VERSION}")
+ORB_STR_APPLICATION_NAME=$(circleci env subst "${ORB_STR_APPLICATION_NAME}")
+ORB_STR_PLATFORM_VERSION=$(circleci env subst "${ORB_STR_PLATFORM_VERSION}")
+ORB_STR_ENVIRONMENT_NAME=$(circleci env subst "${ORB_STR_ENVIRONMENT_NAME}")
+ORB_STR_LABEL=$(circleci env subst "${ORB_STR_LABEL}")
+ORB_STR_DESCRIPTION=$(circleci env subst "${ORB_STR_DESCRIPTION}")
+ORB_STR_PROFILE_NAME=$(circleci env subst "${ORB_STR_PROFILE_NAME}")
 
-if [ -z "${ORB_VAL_LABEL}" ]; then
-    set -- "$@" -l "${ORB_VAL_LABEL}"
+if [ -z "${ORB_STR_LABEL}" ]; then
+    set -- "$@" -l "${ORB_STR_LABEL}"
 fi
 
-if [ -z "${ORB_VAL_DESCRIPTION}" ]; then
-    set -- "$@" -m "${ORB_VAL_DESCRIPTION}"
+if [ -z "${ORB_STR_DESCRIPTION}" ]; then
+    set -- "$@" -m "${ORB_STR_DESCRIPTION}"
 fi
 
 set -x
-eb init "${ORB_EVAL_APPLICATION_NAME}" -r "${AWS_DEFAULT_REGION}" -p "${ORB_EVAL_PLATFORM_VERSION}" --profile "${ORB_VAL_PROFILE}"
-eb deploy "${ORB_VAL_ENVIRONMENT_NAME}" "$@"
+eb init "${ORB_STR_APPLICATION_NAME}" -r "${AWS_DEFAULT_REGION}" -p "${ORB_STR_PLATFORM_VERSION}" --profile "${ORB_STR_PROFILE_NAME}"
+eb deploy "${ORB_STR_ENVIRONMENT_NAME}" "$@"
 set +x

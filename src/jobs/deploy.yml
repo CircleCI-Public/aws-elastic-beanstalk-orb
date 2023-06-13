@@ -51,10 +51,10 @@ steps:
       name: EB Deploy
       working_directory: << parameters.app_dir >>
       environment:
-        ORB_EVAL_APPLICATION_NAME: << parameters.application_name >>
-        ORB_EVAL_PLATFORM_VERSION: << parameters.platform_version >>
-        ORB_VAL_ENVIRONMENT_NAME: << parameters.environment_name >>
-        ORB_VAL_LABEL: << parameters.label >>
-        ORB_VAL_DESCRIPTION: << parameters.description >>
-        ORB_VAL_PROFILE: << parameters.profile_name >>
+        ORB_STR_APPLICATION_NAME: << parameters.application_name >>
+        ORB_STR_PLATFORM_VERSION: << parameters.platform_version >>
+        ORB_STR_ENVIRONMENT_NAME: << parameters.environment_name >>
+        ORB_STR_LABEL: << parameters.label >>
+        ORB_STR_DESCRIPTION: << parameters.description >>
+        ORB_STR_PROFILE_NAME: << parameters.profile_name >>
       command: << include(scripts/deploy.sh) >>
