@@ -30,7 +30,7 @@ jobs:
     steps:
       - checkout
       - aws-cli/setup:
-          role-arn: arn:aws:iam::122211685980:role/CPE_ELASTIC_BEANSTALK_TEST
+          role_arn: arn:aws:iam::122211685980:role/CPE_ELASTIC_BEANSTALK_TEST
       - aws-elastic-beanstalk/setup:
           version: << parameters.version >>
       - run:
@@ -73,7 +73,7 @@ jobs:
     steps:
       - checkout
       - aws-cli/setup:
-          role-arn: arn:aws:iam::122211685980:role/CPE_ELASTIC_BEANSTALK_TEST
+          role_arn: arn:aws:iam::122211685980:role/CPE_ELASTIC_BEANSTALK_TEST
       - aws-elastic-beanstalk/setup
       - run:
           name: EB Create
@@ -106,8 +106,8 @@ workflows:
                 command: curl $(eb status | grep CNAME | cut -d ":" -f 2)
           auth:
             - aws-cli/setup:
-                role-arn: arn:aws:iam::122211685980:role/CPE_ELASTIC_BEANSTALK_TEST
-                role-session-name: OIDC-Test-Session
+                role_arn: arn:aws:iam::122211685980:role/CPE_ELASTIC_BEANSTALK_TEST
+                role_session_name: OIDC-Test-Session
           context: [CPE-OIDC]
           environment_name: sample-app-env
           application_name: sample_app

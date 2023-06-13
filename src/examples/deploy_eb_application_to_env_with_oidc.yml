@@ -1,6 +1,6 @@
 description: |
   Easily deploy your application to Elastic Beanstalk with the provided deploy job using OIDC for authentication.
-  Import the aws-cli orb and authenticate using the aws-cli/setup command with a valid role-arn for OIDC authentication.
+  Import the aws-cli orb and authenticate using the aws-cli/setup command with a valid role_arn for OIDC authentication.
   This example shows how a Node.JS application may be tested and then deployed in a realistic CI environment, using both the Node orb and AWS Elastic Beanstalk orb.
   This assumes the EB environment already exists and is awaiting deployments.
 
@@ -19,7 +19,7 @@ usage:
               # Add authentication step with OIDC using aws-cli/setup command
               - aws-cli/setup:
                   profile: "OIDC-USER"
-                  role-arn: "arn:aws:iam::123456789012:role/VALID_OIDC_CODEDEPLOY_ROLE"
+                  role_arn: "arn:aws:iam::123456789012:role/VALID_OIDC_CODEDEPLOY_ROLE"
             environment_name: my-app # It is assumed this environment has been created
             label: version-<<pipeline.number>>
             # Must use same profile configured in aws-cli/setup command
