@@ -27,7 +27,7 @@ SetupPipx() {
 
 
 InstallEBCLI() {
-    ORB_EVAL_EB_CLI_VERSION=$(circleci env subst "${ORB_EVAL_EB_CLI_VERSION}")
+    ORB_STR_EB_CLI_VERSION="$(circleci env subst "${ORB_STR_EB_CLI_VERSION}")"
     if uname -a | grep Darwin > /dev/null 2>&1; then
         cd /tmp || { echo "Not able to access /tmp"; return; }
         git clone https://github.com/aws/aws-elastic-beanstalk-cli-setup.git
@@ -47,8 +47,8 @@ InstallEBCLI() {
         fi
     fi
     # If the input version environment variable is set, install that version. Else install latest.
-    if [ -n "$ORB_EVAL_EB_CLI_VERSION" ]; then
-        pipx install awsebcli=="${ORB_EVAL_EB_CLI_VERSION}"
+    if [ -n "$ORB_STR_EB_CLI_VERSION" ]; then
+        pipx install awsebcli=="${ORB_STR_EB_CLI_VERSION}"
         echo "Complete"
     else
         pipx install awsebcli

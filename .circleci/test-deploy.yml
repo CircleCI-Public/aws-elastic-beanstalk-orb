@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  aws-cli: circleci/aws-cli@3.1
+  aws-cli: circleci/aws-cli@4.0
   orb-tools: circleci/orb-tools@12.0
   aws-elastic-beanstalk: {}
 
@@ -26,11 +26,11 @@ jobs:
         default:
     executor: << parameters.executor >>
     environment:
-      ORB_EVAL_EB_CLI_VERSION: << parameters.version >>
+      ORB_STR_EB_CLI_VERSION: << parameters.version >>
     steps:
       - checkout
       - aws-cli/setup:
-          role-arn: arn:aws:iam::122211685980:role/CPE_ELASTIC_BEANSTALK_TEST
+          role_arn: arn:aws:iam::122211685980:role/CPE_ELASTIC_BEANSTALK_TEST
       - aws-elastic-beanstalk/setup:
           version: << parameters.version >>
       - run:
@@ -46,17 +46,17 @@ jobs:
             # Uses python to isolate the latest ebcli version number from the pypi json.
             EBCLI_LATEST_VERSION=$(python3 -c "import json, urllib.request; print(json.load(urllib.request.urlopen('https://pypi.org/pypi/awsebcli/json'))['info']['version'])")""
             # To prevent confusion when the string is empty (due to default), set input version to latest version
-            if [ -z "$ORB_EVAL_EB_CLI_VERSION" ]; then
-              ORB_EVAL_EB_CLI_VERSION="$EBCLI_LATEST_VERSION"
+            if [ -z "$ORB_STR_EB_CLI_VERSION" ]; then
+              ORB_STR_EB_CLI_VERSION="$EBCLI_LATEST_VERSION"
             fi
             # Prints the version numbers to the console
             echo "Latest CLI version: $EBCLI_LATEST_VERSION"
-            echo "Expected CLI version: $ORB_EVAL_EB_CLI_VERSION"
+            echo "Expected CLI version: $ORB_STR_EB_CLI_VERSION"
             echo "Elastic Beanstalk CLI version: $EBCLI_VERSION"
 
             # Checks if the installed version matches the expected version
-            if [ -n "$EBCLI_VERSION" ] && [ -n "$ORB_EVAL_EB_CLI_VERSION" ] && [ -n "$EBCLI_LATEST_VERSION" ]; then
-              if [ "$EBCLI_VERSION" == "$ORB_EVAL_EB_CLI_VERSION" ]; then
+            if [ -n "$EBCLI_VERSION" ] && [ -n "$ORB_STR_EB_CLI_VERSION" ] && [ -n "$EBCLI_LATEST_VERSION" ]; then
+              if [ "$EBCLI_VERSION" == "$ORB_STR_EB_CLI_VERSION" ]; then
                 echo "CLI version matches expected version."
               else
                 echo "Error: CLI version does not match expected version." >&2
@@ -73,7 +73,7 @@ jobs:
     steps:
       - checkout
       - aws-cli/setup:
-          role-arn: arn:aws:iam::122211685980:role/CPE_ELASTIC_BEANSTALK_TEST
+          role_arn: arn:aws:iam::122211685980:role/CPE_ELASTIC_BEANSTALK_TEST
       - aws-elastic-beanstalk/setup
       - run:
           name: EB Create
@@ -106,9 +106,10 @@ workflows:
                 command: curl $(eb status | grep CNAME | cut -d ":" -f 2)
           auth:
             - aws-cli/setup:
-                role-arn: arn:aws:iam::122211685980:role/CPE_ELASTIC_BEANSTALK_TEST
-                role-session-name: OIDC-Test-Session
+                role_arn: arn:aws:iam::122211685980:role/CPE_ELASTIC_BEANSTALK_TEST
+                role_session_name: OIDC-Test-Session
           context: [CPE-OIDC]
+          region: us-west-2
           environment_name: sample-app-env
           application_name: sample_app
           label: test-label
