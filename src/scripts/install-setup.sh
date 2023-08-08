@@ -2,7 +2,7 @@
 if [[ $EUID == 0 ]]; then export SUDO=""; else # Check if we are root
   export SUDO="sudo";
 fi
-
+set -x
 SetupPython() {
     # Sets up python3
     $SUDO apt-get -qq -y install python3-dev
@@ -84,3 +84,4 @@ if [ "${0#*"$TEST_ENV"}" == "$0" ]; then
     CheckAWSEnvVars
     InstallEBCLI
 fi
+set +x
