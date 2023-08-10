@@ -10,18 +10,18 @@ SetupPython() {
 }
 
 SetupPipx() {
-    # sudo wget https://bootstrap.pypa.io/get-pip.py
-    # sudo python3 ./get-pip.py
-    # sudo pip install "pyyaml<5.4"
-    # sudo pip install --upgrade setuptools
-    # sudo pip install --upgrade pip awsebcli
     if [ "$(which pip | tail -1)" ]; then
         echo "pip found"
     else
         echo "pip not found"
-        $SUDO apt-get update
-        $SUDO apt-get install -qq -y python3-setuptools
-        curl https://bootstrap.pypa.io/get-pip.py | python3
+        # $SUDO apt-get update
+        # $SUDO apt-get install -qq -y python3-setuptools
+        # curl https://bootstrap.pypa.io/get-pip.py | python3
+        $SUDO wget https://bootstrap.pypa.io/get-pip.py
+        $SUDO python3 ./get-pip.py
+        $SUDO pip install "pyyaml<5.4"
+        $SUDO pip install --upgrade setuptools
+        # sudo pip install --upgrade pip awsebcli
     fi
     # Install venv with system for pipx
     # By using pipx we dont have to worry about activating the virtualenv before using eb
