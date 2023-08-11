@@ -10,13 +10,13 @@ SetupPython() {
 }
 
 SetupPipx() {
+    # sudo wget https://bootstrap.pypa.io/get-pip.py
+    # sudo python3 ./get-pip.py
+    # sudo pip install "pyyaml<5.4"
+    # sudo pip install --upgrade setuptools
+    # sudo pip install --upgrade pip awsebcli
     if [ "$(which pip | tail -1)" ]; then
         echo "pip found"
-        $SUDO wget https://bootstrap.pypa.io/get-pip.py
-        $SUDO python3 ./get-pip.py
-        $SUDO pip install "pyyaml<5.4"
-        $SUDO pip install --upgrade setuptools
-        $SUDO pip install --upgrade pip awsebcli
     else
         echo "pip not found"
         $SUDO apt-get update
