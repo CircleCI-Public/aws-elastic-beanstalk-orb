@@ -12,6 +12,7 @@ SetupPython() {
 SetupPipx() {
     if [ "$(which pip | tail -1)" ]; then
         echo "pip found"
+        pip install --upgrade pip
     else
         echo "pip not found"
         # $SUDO apt-get update
