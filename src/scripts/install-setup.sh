@@ -30,8 +30,8 @@ SetupPipx() {
     fi
     # Install venv with system for pipx
     # By using pipx we dont have to worry about activating the virtualenv before using eb
-    $SUDO apt-get -qq -y install python3-venv
-    pip install pipx
+    # $SUDO apt-get -qq -y install python3-venv
+    # pip install pipx
 }
 
 
