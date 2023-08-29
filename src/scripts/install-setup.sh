@@ -26,7 +26,7 @@ SetupPipx() {
         $SUDO pip install virtualenv
         $SUDO pip install "pyyaml<5.4"
         $SUDO pip install --upgrade setuptools
-        $SUDO pip install --upgrade pip awsebcli
+        # $SUDO pip install --upgrade pip awsebcli
     fi
     # Install venv with system for pipx
     # By using pipx we dont have to worry about activating the virtualenv before using eb
@@ -58,10 +58,10 @@ InstallEBCLI() {
     fi
     # If the input version environment variable is set, install that version. Else install latest.
     if [ -n "$ORB_STR_EB_CLI_VERSION" ]; then
-        pipx install awsebcli=="${ORB_STR_EB_CLI_VERSION}"
+        pip install awsebcli=="${ORB_STR_EB_CLI_VERSION}"
         echo "Complete"
     else
-        pipx install awsebcli
+        pip install awsebcli
         echo "Complete"
     fi
 }
