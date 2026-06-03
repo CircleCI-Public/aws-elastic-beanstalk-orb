@@ -1,0 +1,49 @@
+description: >
+  Deploy an Elastic Beanstalk application with CircleCI deploy markers.
+  Four modes are available via the deploy_markers_mode parameter:
+    OFF           - no deploy markers (default)
+    LOG           - log a deployment event after the EB deploy
+    PLAN          - create a planned marker before the EB deploy; caller manages status updates
+    PLAN_AND_UPDATE - full lifecycle: plan → running → success/failed
+
+usage:
+  version: 2.1
+
+  orbs:
+    aws-elastic-beanstalk: circleci/aws-elastic-beanstalk@2.0
+    aws-cli: circleci/aws-cli@5.4
+
+  workflows:
+    deploy:
+      jobs:
+        # LOG mode — log a deployment event after the EB deploy completes
+        - aws-elastic-beanstalk/deploy:
+            name: deploy-log
+            application_name: my-app
+            environment_name: my-app-prod
+            deploy_markers_mode: LOG
+            deploy_markers_target_version: ${CIRCLE_SHA1:0:7}
+            auth:
+              - aws-cli/setup:
+                  role_arn: ${AWS_ROLE_ARN}
+
+        # PLAN mode — create a planned marker before deploy; status updates are left to the caller
+        - aws-elastic-beanstalk/deploy:
+            name: deploy-plan
+            application_name: my-app
+            environment_name: my-app-prod
+            deploy_markers_mode: PLAN
+            deploy_markers_target_version: ${CIRCLE_SHA1:0:7}
+            auth:
+              - aws-cli/setup:
+                  role_arn: ${AWS_ROLE_ARN}
+
+        # PLAN_AND_UPDATE mode — full lifecycle managed by the orb (default)
+        - aws-elastic-beanstalk/deploy:
+            name: deploy-full
+            application_name: my-app
+            environment_name: my-app-prod
+            deploy_markers_target_version: ${CIRCLE_SHA1:0:7}
+            auth:
+              - aws-cli/setup:
+                  role_arn: ${AWS_ROLE_ARN}
