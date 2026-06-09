@@ -16,12 +16,13 @@ SetupPipx() {
         echo "pip not found"
         $SUDO apt-get update
         $SUDO apt-get install -qq -y python3-setuptools
-        curl https://bootstrap.pypa.io/pip/3.5/get-pip.py | python3
+        curl https://bootstrap.pypa.io/get-pip.py | python3
     fi
     # Install venv with system for pipx
     # By using pipx we dont have to worry about activating the virtualenv before using eb
     $SUDO apt-get -qq -y install python3-venv
-    pip install pipx
+    # --break-system-packages is required on Ubuntu 22.04+ (PEP 668); fall back for older pip
+    pip install pipx --break-system-packages 2>/dev/null || pip install pipx
 }
 
 
