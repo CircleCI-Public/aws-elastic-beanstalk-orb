@@ -1,10 +1,10 @@
 description: >
   Deploy an Elastic Beanstalk application with CircleCI deploy markers.
   Four modes are available via the deploy_markers_mode parameter:
-    OFF           - no deploy markers (default)
+    OFF           - no deploy markers
     LOG           - log a deployment event after the EB deploy
     PLAN          - create a planned marker before the EB deploy; caller manages status updates
-    PLAN_AND_UPDATE - full lifecycle: plan → running → success/failed
+    PLAN_AND_UPDATE - full lifecycle: plan → running → success/failed (default)
 
 usage:
   version: 2.1

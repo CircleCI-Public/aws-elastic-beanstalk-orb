@@ -48,10 +48,10 @@ parameters:
   deploy_markers_mode:
     description: >
       Controls CircleCI deploy marker integration via the deploys orb.
-      OFF: no deploy markers are created (default).
+      OFF: no deploy markers are created.
       LOG: logs a deployment event after the EB deploy completes.
       PLAN: creates a planned deployment marker before the EB deploy; status updates are left to the caller.
-      PLAN_AND_UPDATE: full lifecycle — plan before deploy, mark as running, then set SUCCESS or FAILED after.
+      PLAN_AND_UPDATE: full lifecycle — plan before deploy, mark as running, then set SUCCESS or FAILED after (default).
     type: enum
     enum: [OFF, LOG, PLAN, PLAN_AND_UPDATE]
     default: PLAN_AND_UPDATE
