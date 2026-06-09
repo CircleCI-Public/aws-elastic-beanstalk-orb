@@ -10,19 +10,18 @@ SetupPython() {
 }
 
 SetupPipx() {
-    if [ "$(which pip | tail -1)" ]; then
+    if python3 -m pip --version > /dev/null 2>&1; then
         echo "pip found"
     else
         echo "pip not found"
         $SUDO apt-get update
-        $SUDO apt-get install -qq -y python3-setuptools
-        curl https://bootstrap.pypa.io/get-pip.py | python3
+        $SUDO apt-get install -qq -y python3-pip
     fi
     # Install venv with system for pipx
     # By using pipx we dont have to worry about activating the virtualenv before using eb
     $SUDO apt-get -qq -y install python3-venv
     # --break-system-packages is required on Ubuntu 22.04+ (PEP 668); fall back for older pip
-    pip install pipx --break-system-packages 2>/dev/null || pip install pipx
+    python3 -m pip install pipx --break-system-packages 2>/dev/null || python3 -m pip install pipx
 }
 
 
