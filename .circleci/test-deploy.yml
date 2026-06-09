@@ -114,7 +114,8 @@ workflows:
           application_name: sample_app
           label: test-label
           app_dir: ./sample_app
-          deploy_markers_mode: OFF
+          deploy_markers_mode: PLAN_AND_UPDATE
+          deploy_markers_deploy_name: test-deploy
           requires:
             - integration-test-deploy-setup
           filters: *filters
