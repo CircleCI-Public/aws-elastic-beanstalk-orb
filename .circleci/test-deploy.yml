@@ -80,7 +80,13 @@ jobs:
           command: |
             cd sample_app
             eb init sample_app -r us-west-2 -p node.js --profile default
-            eb status sample-app-env 2>/dev/null || eb create sample-app-env --single --profile default
+            EB_STATUS=$(eb status sample-app-env 2>&1) && EB_RC=0 || EB_RC=$?
+            if echo "$EB_STATUS" | grep -qE "Status: (Terminating|CREATE_FAILED)"; then
+              eb terminate sample-app-env --force
+              eb create sample-app-env --single --profile default
+            elif [ $EB_RC -ne 0 ]; then
+              eb create sample-app-env --single --profile default
+            fi
 workflows:
   test-deploy:
     jobs:
