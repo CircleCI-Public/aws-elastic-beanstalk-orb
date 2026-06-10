@@ -79,8 +79,8 @@ jobs:
           name: EB Create
           command: |
             cd sample_app
-            eb init sample_app -r $AWS_DEFAULT_REGION -p node.js --profile default
             eb init sample_app -r us-west-2 -p node.js --profile default
+            eb status sample-app-env 2>/dev/null || eb create sample-app-env --single --profile default
 workflows:
   test-deploy:
     jobs:
