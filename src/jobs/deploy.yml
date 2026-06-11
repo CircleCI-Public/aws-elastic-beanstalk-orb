@@ -18,7 +18,7 @@ parameters:
   platform_version:
     description: The platform version to use. You can specify a platform, a platform and version, a platform branch, a solution stack name, or a solution stack ARN. Use 'eb platform list' to get a list of available configurations.
     type: string
-    default: "node.js"
+    default: "node.js 22"
   label:
     description: Specify a label to use for the version that the EB CLI creates. If the label has already been used, the EB CLI redeploys the previous version with that label.
     type: string
