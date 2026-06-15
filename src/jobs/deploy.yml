@@ -58,9 +58,9 @@ parameters:
   deploy_markers_deploy_name:
     description: >
       Unique identifier for this deployment within the workflow. Used by PLAN and PLAN_AND_UPDATE modes.
-      Must be unique if planning multiple deployments in the same workflow.
+      Must be unique if planning multiple deployments in the same workflow. Defaults to the CircleCI workflow job ID.
     type: string
-    default: "deploy"
+    default: "${CIRCLE_WORKFLOW_JOB_ID}"
   deploy_markers_namespace:
     description: >
       Namespace of the deployment shown in the CircleCI Deploys UI.
